@@ -31,14 +31,16 @@ namespace WpfOpenCV
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            
+            //引用了OpenCvSharp BitmapImage和Bitmap对象会增加扩展方法ToMat,用于处理已经在内存中的图片
+            //BitmapImage bmp = new BitmapImage();
+            //Mat mat = bmp.ToMat();
         }
         //正常
         private void BtnChange0_Click(object sender, RoutedEventArgs e)
         {
             using (var src = new Mat(@"..\..\Images\ocv02.jpg", ImreadModes.Unchanged))
             {
-                var bmp = src.ToBitmap();//需要引用OpenCvSharp.Extensions，才能使用ToBitmap
+                var bmp = src.ToBitmap();//需要引用OpenCvSharp.Extensions，才能使用ToBitmap 
                 var returnSource = Imaging.CreateBitmapSourceFromHBitmap(bmp.GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions()); 
                 imgOutput.Source = returnSource;
             }
