@@ -35,6 +35,16 @@ namespace WpfOpenCV
             //BitmapImage bmp = new BitmapImage();
             //Mat mat = bmp.ToMat();
         }
+        private void SetSource(string url)
+        { 
+            using (var src = new Mat(url, ImreadModes.Unchanged))
+            {
+                var bmp = src.ToBitmap();//需要引用OpenCvSharp.Extensions，才能使用ToBitmap 
+                var returnSource = Imaging.CreateBitmapSourceFromHBitmap(bmp.GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+                imgOrignal.Source = returnSource;
+            }
+        }
+
         //正常
         private void BtnChange0_Click(object sender, RoutedEventArgs e)
         {
@@ -49,7 +59,7 @@ namespace WpfOpenCV
         //蓝红颜色互换
         private void BtnChange1_Click(object sender, RoutedEventArgs e)
         {
-            Mat mat = new Mat(@"..\..\Images\ocv02.jpg", ImreadModes.Unchanged);
+            Mat mat = new Mat(@"..\..\Images\ocv01.jpg", ImreadModes.Unchanged);
             //Mat mat = new Mat(new OpenCvSharp.Size(128, 128), MatType.CV_8U, Scalar.All(255));
             for (var y = 0; y < mat.Height; y++)
             {
@@ -69,12 +79,13 @@ namespace WpfOpenCV
             bmp.EndInit();
             imgOutput.Source = bmp;
             mat.Dispose();/// 该方法在mat里被重写了，可以释放资源，可以放心调用
+            SetSource(@"..\..\Images\ocv01.jpg");
         }
 
         //图片灰显
         private void BtnChange2_Click(object sender, RoutedEventArgs e)
         {
-            using (var src = new Mat(@"..\..\Images\ocv02.jpg", ImreadModes.Grayscale))
+            using (var src = new Mat(@"..\..\Images\ocv03.jpg", ImreadModes.Grayscale))
             {
                 var mem = src.ToMemoryStream();
                 BitmapImage bmp = new BitmapImage();
@@ -83,6 +94,7 @@ namespace WpfOpenCV
                 bmp.EndInit();
                 imgOutput.Source = bmp; 
             }
+            SetSource(@"..\..\Images\ocv03.jpg");
         }
 
         //2倍缩小读取图像
@@ -108,6 +120,7 @@ namespace WpfOpenCV
                 //    imgOutput.Source = bmp2;
                 //}
             }
+            SetSource(@"..\..\Images\ocv02.jpg");
         }
 
         //腐蚀
@@ -123,6 +136,7 @@ namespace WpfOpenCV
                 bmp.EndInit();
                 imgOutput.Source = bmp; 
             }
+            SetSource(@"..\..\Images\ocv02.jpg");
         }
 
         //膨胀
@@ -141,7 +155,7 @@ namespace WpfOpenCV
                     imgOutput.Source = bmp;
                 }
             }
-          
+            SetSource(@"..\..\Images\ocv02.jpg");
         }
   
 
@@ -161,7 +175,8 @@ namespace WpfOpenCV
                     bmp.EndInit();
                     imgOutput.Source = bmp;
                 }
-            } 
+            }
+            SetSource(@"..\..\Images\ocv02.jpg");
         }
 
         //变换顶点
@@ -187,7 +202,7 @@ namespace WpfOpenCV
                     imgOutput.Source = bmp;
                 }
             }
-            
+            SetSource(@"..\..\Images\ocv02.jpg");
         }
         //     blur(edges, edges, Size(7, 7));//模糊化  
         //Canny(edges, edges, 0, 30, 3);//边缘化  
@@ -207,6 +222,7 @@ namespace WpfOpenCV
                     imgOutput.Source = bmp;
                 }
             }
+            SetSource(@"..\..\Images\ocv02.jpg");
         }
         //边缘化  
         private void BtnChange9_Click(object sender, RoutedEventArgs e)
@@ -215,7 +231,7 @@ namespace WpfOpenCV
             {
                 using (var dst = new Mat())//复制以后处理
                 {
-                    Cv2.Canny(src, dst, 0, 30, 3);
+                    Cv2.Canny(src, dst, 10, 400, 3);
                     var mem = dst.ToMemoryStream();
                     BitmapImage bmp = new BitmapImage();
                     bmp.BeginInit();
@@ -224,6 +240,95 @@ namespace WpfOpenCV
                     imgOutput.Source = bmp;
                 }
             }
+            SetSource(@"..\..\Images\ocv02.jpg");
         }
+        //亮度
+        private void BtnChange10_Click(object sender, RoutedEventArgs e)
+        {
+            BitmapImage bmpSource = new BitmapImage(new Uri("pack://application:,,,/images/ocv02.jpg" )); 
+            Mat mat = bmpSource.ToMat();
+            for (var y = 0; y < mat.Height; y++)
+            {
+                for (var x = 0; x < mat.Width; x++)
+                {
+                    Vec3b color = mat.Get<Vec3b>(y, x);
+                    int item0 = color.Item0;
+                    int item1 = color.Item1;
+                    int item2 = color.Item2;
+                    #region  变暗
+                    item0 -= 60;
+                    item1 -= 60;
+                    item2 -= 60;
+                    if (item0 < 0)
+                        item0 = 0;
+                    if (item1 < 0)
+                        item1 = 0;
+                    if (item2 < 0)
+                        item2 = 0;
+                    #endregion
+                    #region  变亮
+                    //item0 += 80;
+                    //item1 += 80;
+                    //item2 += 80;
+                    //if (item0 > 255)
+                    //    item0 = 255;
+                    //if (item1 > 255)
+                    //    item1 = 255;
+                    //if (item2 > 255)
+                    //    item2 = 255;
+                    #endregion
+
+                    color.Item0 = (byte)item0;
+                    color.Item1 = (byte)item1;
+                    color.Item2 = (byte)item2;
+                    mat.Set(y, x, color);
+                }
+            }
+            var mem = mat.ToMemoryStream();
+            BitmapImage bmp = new BitmapImage();
+            bmp.BeginInit();
+            bmp.StreamSource = mem;
+            bmp.EndInit();
+            imgOutput.Source = bmp;
+            mat.Dispose();/// 该方法在mat里被重写了，可以释放资源，可以放心调用
+            SetSource(@"..\..\Images\ocv02.jpg");
+        }
+        //高斯模糊
+        private void BtnChange11_Click(object sender, RoutedEventArgs e)
+        {
+            BitmapImage bmpSource = new BitmapImage(new Uri("pack://application:,,,/images/ocv02.jpg"));
+            Mat src = bmpSource.ToMat(); 
+            using (var dst = new Mat())
+            {
+                Cv2.GaussianBlur(src, dst,new OpenCvSharp.Size(5, 5), 1.5);
+                var mem = dst.ToMemoryStream();
+                BitmapImage bmp = new BitmapImage();
+                bmp.BeginInit();
+                bmp.StreamSource = mem;
+                bmp.EndInit();
+                imgOutput.Source = bmp;
+            } 
+            src.Dispose();
+            SetSource(@"..\..\Images\ocv02.jpg");
+        }
+        //美颜磨皮 双边滤波 
+        private void BtnChange12_Click(object sender, RoutedEventArgs e)
+        {
+            using (var src = new Mat(@"..\..\Images\ocv02.jpg", ImreadModes.AnyDepth | ImreadModes.AnyColor))
+            {
+                using (var dst = new Mat())//复制以后处理
+                {
+                    Cv2.BilateralFilter(src, dst, 15, 35d, 35d);
+                    var mem = dst.ToMemoryStream();
+                    BitmapImage bmp = new BitmapImage();
+                    bmp.BeginInit();
+                    bmp.StreamSource = mem;
+                    bmp.EndInit();
+                    imgOutput.Source = bmp;
+                }
+            }
+            SetSource(@"..\..\Images\ocv02.jpg");
+        }
+       
     }
 }

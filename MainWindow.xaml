@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfOpenCV" Loaded="Window_Loaded"
         mc:Ignorable="d"
-        Title="MainWindow" Height="800" Width="1185" WindowStartupLocation="CenterScreen">
+        Title="MainWindow" Height="400" Width="800" WindowStartupLocation="CenterScreen">
     <Grid>
         <DockPanel>
             <StackPanel Width="130" DockPanel.Dock="Left" Margin="10">
@@ -16,13 +16,16 @@
                 <Button Name="btnChange4"  Content="腐蚀" Click="BtnChange4_Click" Margin="0,5,0,0"></Button>
                 <Button Name="btnChange5"  Content="膨胀" Click="BtnChange5_Click" Margin="0,5,0,0"></Button>
                 <Button Name="btnChange6"  Content="反转" Click="BtnChange6_Click" Margin="0,5,0,0"></Button>
-                <Button Name="btnChange7"  Content="变换定点" Click="BtnChange7_Click" Margin="0,5,0,0"></Button>
+                <Button Name="btnChange7"  Content="变换顶点" Click="BtnChange7_Click" Margin="0,5,0,0"></Button>
                 <Button Name="btnChange8"  Content="模糊" Click="BtnChange8_Click" Margin="0,5,0,0"></Button>
                 <Button Name="btnChange9"  Content="边缘化" Click="BtnChange9_Click" Margin="0,5,0,0"></Button>
+                <Button Name="btnChange10"  Content="亮度" Click="BtnChange10_Click" Margin="0,5,0,0"></Button>
+                <Button Name="btnChange11"  Content="高斯模糊" Click="BtnChange11_Click" Margin="0,5,0,0"></Button>
+                <Button Name="btnChange12"  Content="美颜磨皮" Click="BtnChange12_Click" Margin="0,5,0,0"></Button>
             </StackPanel>
-            <DockPanel VerticalAlignment="Top" Margin="0,10,10,0">
-                <Image DockPanel.Dock="Right" Name="imgOrignal" Source="Images\ocv02.jpg" Stretch="UniformToFill" Width="501" Height="490"></Image>
-                <Image Name="imgOutput" Source="Images\ocv02.jpg" Stretch="UniformToFill" Width="501" Height="490"></Image>
+            <DockPanel VerticalAlignment="Top" Margin="10,10,10,10">
+                <Image DockPanel.Dock="Right" Name="imgOrignal" Source="Images\ocv02.jpg" Stretch="UniformToFill" Width="300" ></Image>
+                <Image Name="imgOutput" Source="Images\ocv02.jpg" Stretch="UniformToFill" Width="300"></Image>
             </DockPanel>
         </DockPanel>
     </Grid>
